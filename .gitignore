@@ -1,0 +1,28 @@
+node_modules
+dist
+.env
+.env.*
+!.env.example
+.DS_Store
+*.log
+
+# Local runtime metadata and secrets
+.data
+.music-free
+.env.local
+
+# Local secrets, databases and runtime artifacts
+.env
+.env.*
+!.env.example
+node_modules/
+dist/
+coverage/
+.DS_Store
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+*.db
+*.log
+.cache/
+.local/

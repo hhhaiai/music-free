@@ -1,0 +1,9 @@
+{
+  "name": "Music Free V4.1.1",
+  "short_name": "Music Free",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0b0e14",
+  "theme_color": "#0b0e14",
+  "description": "Local-first vocal-first global music discovery and audio player"
+}

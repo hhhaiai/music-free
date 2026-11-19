@@ -1,0 +1,63 @@
+import { readFileSync, existsSync } from "node:fs";
+import { resolve } from "node:path";
+import assert from "node:assert/strict";
+const root = process.cwd();
+const pkg = JSON.parse(readFileSync(resolve(root, "package.json"), "utf8"));
+assert.equal(pkg.version, "4.1.1");
+for (const file of ["src/App.tsx", "src/presentation/App.tsx", "src/presentation/components/MusicComponents.tsx", "src/presentation/components/ImmersivePlayer.tsx", "src/presentation/components/ConcertSetlistPanel.tsx", "src/types.ts", "src/domain/music/types.ts", "src/domain/music/identity.ts", "src/domain/music/metadata.ts", "src/domain/music/regions.ts", "src/domain/music/entities.ts", "src/domain/music/sourceRanking.ts", "src/domain/music/concertChapters.ts", "src/application/ports/musicProvider.ts", "src/application/use-cases/musicDiscovery.ts", "src/application/use-cases/resolveCatalogAudio.ts", "src/bootstrap/compositionRoot.ts", "src/infrastructure/providers/registry.ts", "src/infrastructure/providers/video/registry.ts", "src/infrastructure/providers/video/youtube.ts", "src/infrastructure/providers/video/bilibili.ts", "src/presentation/components/VideoSearchPanel.tsx", "src/presentation/hooks/useLocalCore.ts", "server/index.mjs", "server/env.mjs", "scripts/env-regression.mjs", "server/providers/youtube.mjs", "server/providers/bilibili.mjs", ".env.example", "server/storage.mjs", "server/scheduler.mjs", "server/tasks/discovery.mjs", "server/providers/http.mjs", "server/providers/openverse.mjs", "server/providers/internet-archive.mjs", "src/lib/db.ts", "src/lib/extractor.ts", "src/providers/openverse.ts", "src/providers/audius.ts", "src/providers/appleCatalog.ts", "src/providers/internetArchive.ts", "src/providers/recommendation.ts", "src/providers/lyrics.ts", "src/engine/bufferManager.ts", "src/engine/playbackController.ts", "src/engine/sourceHealth.ts", "src/engine/mediaProbe.ts", "src/components/LocalMediaWorkbench.tsx", "server/media/capabilities.mjs", "scripts/media-regression.mjs", "public/sw.js", "README.md", "ROADMAP.md", "ARCHITECTURE.md", "CHANGELOG.md", "TEST_PLAN.md"]) assert.ok(existsSync(resolve(root, file)), `missing ${file}`);
+const app = readFileSync(resolve(root, "src/presentation/App.tsx"), "utf8");
+const sw = readFileSync(resolve(root, "public/sw.js"), "utf8");
+const audius = readFileSync(resolve(root, "src/infrastructure/providers/audius.ts"), "utf8");
+assert.match(audius, /tracks\/search/); assert.match(audius, /tracks\/trending/); assert.match(audius, /MIN_FULL_TRACK_SECONDS/);
+assert.match(app, /fullTracksOnly/); assert.match(app, /searchAppleCatalog/); assert.match(app, /catalogResults/); assert.match(app, /matchCatalogAudio/); assert.match(app, /vocalOnly/); assert.match(app, /waitUntilPlayable/); assert.match(app, /recoverPlayback/); assert.match(app, /playlists/); assert.match(app, /importLrc/); assert.match(app, /search-filters/);
+assert.match(sw, /request\.destination === "audio"/); assert.match(sw, /request\.destination === "video"/);
+assert.match(sw, /music-free-v4\.1\.1-shell/);
+assert.doesNotMatch(app, /youtube\.com\/embed|player\.bilibili\.com/);
+console.log("Music Free V4.1.1 static smoke check passed.");
+
+const storage = readFileSync(resolve(root, "server/storage.mjs"), "utf8");
+assert.match(storage, /journal_mode=WAL/);
+assert.match(storage, /synchronous=FULL/);
+assert.match(storage, /music-free\.sqlite/);
+assert.match(app, /本地磁盘缓存/);
+assert.match(app, /LocalMediaWorkbench/);
+assert.match(app, /playbackControllerFor/);
+assert.match(app, /sourceHealth/);
+
+const videoPanel = readFileSync(resolve(root, "src/presentation/components/VideoSearchPanel.tsx"), "utf8");
+const youtube = readFileSync(resolve(root, "server/providers/youtube.mjs"), "utf8");
+const bilibili = readFileSync(resolve(root, "server/providers/bilibili.mjs"), "utf8");
+assert.match(videoPanel, /VideoSearchPanel/);
+assert.match(videoPanel, /official-embed|官方嵌入播放器/);
+assert.match(youtube, /videoEmbeddable/);
+assert.match(youtube, /youtube-nocookie\.com/);
+assert.match(bilibili, /player\.bilibili\.com/);
+
+const extractor = readFileSync(resolve(root, "src/infrastructure/media/localExtractor.ts"), "utf8");
+assert.match(extractor, /extractMediaTracks/);
+assert.match(extractor, /-map/);
+assert.match(extractor, /browser-local-memory/);
+const mediaApi = readFileSync(resolve(root, "server/index.mjs"), "utf8");
+assert.match(mediaApi, /media\/capabilities/);
+assert.match(mediaApi, /media\/source-health\/report/);
+assert.match(mediaApi, /127\.0\.0\.1/);
+
+const architecture = readFileSync(resolve(root, "ARCHITECTURE.md"), "utf8");
+assert.match(architecture, /Domain/);
+assert.match(architecture, /Application/);
+assert.match(architecture, /Infrastructure/);
+assert.match(architecture, /Composition Root/);
+const bootstrap = readFileSync(resolve(root, "src/bootstrap/compositionRoot.ts"), "utf8");
+assert.match(bootstrap, /createMusicDiscoveryUseCases/);
+const visualizer = readFileSync(resolve(root, "src/presentation/components/ImmersivePlayer.tsx"), "utf8");
+assert.match(visualizer, /immersive-spectrum/);
+const setlist = readFileSync(resolve(root, "src/domain/music/concertChapters.ts"), "utf8");
+assert.match(setlist, /parseConcertChapters/);
+
+assert.ok(existsSync(resolve(root, "src/domain/music/searchIntent.ts")));
+assert.ok(existsSync(resolve(root, "src/domain/music/verifiedCatalog.ts")));
+assert.ok(existsSync(resolve(root, "src/application/use-cases/catalogSearch.ts")));
+assert.ok(existsSync(resolve(root, "src/application/use-cases/startBufferedPlayback.ts")));
+assert.ok(existsSync(resolve(root, "src/presentation/components/OfficialVideoStage.tsx")));
+assert.match(app, /OfficialVideoStage/);
+assert.match(app, /startBufferedPlayback/);

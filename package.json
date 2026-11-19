@@ -1,0 +1,46 @@
+{
+  "name": "music-free",
+  "private": true,
+  "version": "4.1.1",
+  "type": "module",
+  "scripts": {
+    "postinstall": "node scripts/copy-ffmpeg.mjs",
+    "dev": "node scripts/run-stack.mjs dev",
+    "build": "tsc --noEmit && vite build",
+    "preview": "node scripts/run-stack.mjs preview",
+    "check": "tsc --noEmit",
+    "verify": "npm test && npm run check && npm run build",
+    "smoke": "node scripts/smoke-check.mjs",
+    "test:search": "node scripts/search-regression.mjs",
+    "test": "npm run smoke && npm run test:search && npm run test:domain && npm run test:application && npm run test:scheduler && npm run test:cache && npm run test:local-core && npm run test:video && npm run test:env && npm run test:media && npm run test:songs && npm run test:buffer",
+    "start": "node scripts/run-stack.mjs preview",
+    "local-core": "node server/index.mjs",
+    "test:domain": "node --experimental-strip-types scripts/domain-regression.mjs",
+    "test:local-core": "node scripts/local-core-regression.mjs",
+    "test:scheduler": "node scripts/scheduler-regression.mjs",
+    "test:cache": "node scripts/cache-regression.mjs",
+    "test:video": "node scripts/video-provider-regression.mjs",
+    "test:env": "node scripts/env-regression.mjs",
+    "test:media": "node --experimental-strip-types scripts/media-regression.mjs",
+    "test:application": "node --experimental-strip-types scripts/application-regression.mjs",
+    "test:songs": "node --experimental-strip-types scripts/song-scenarios-regression.mjs",
+    "test:buffer": "node --experimental-strip-types scripts/buffer-regression.mjs"
+  },
+  "dependencies": {
+    "@ffmpeg/core": "0.12.10",
+    "@ffmpeg/ffmpeg": "0.12.15",
+    "@ffmpeg/util": "0.12.2",
+    "@vitejs/plugin-react": "4.4.1",
+    "vite": "6.3.5",
+    "typescript": "5.8.3",
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
+  },
+  "devDependencies": {
+    "@types/react": "19.1.0",
+    "@types/react-dom": "19.1.0"
+  },
+  "engines": {
+    "node": ">=22.5.0"
+  }
+}
